@@ -2,10 +2,10 @@
 #include <math.h>
 using namespace std;
 class ulamek{
-public:
+
     int calkowita, licznik, mianownik;
     double dziesietna;
-
+public:
     ulamek(){
     calkowita = 1;
     licznik = 1;
@@ -40,6 +40,24 @@ public:
         else
         dziesietna = licznik / mianownik;
         cout << dziesietna << endl;
+    }
+    int getCalkowita(){
+        return calkowita;
+    }
+    int getLicznik(){
+        return licznik;
+    }
+    int getMianownik(){
+        return mianownik;
+    }
+    void setCalkowita(int c){
+        calkowita = c;
+    }
+    void setLicznik(int l){
+        licznik = l;
+    }
+    void setMianownik(int m){
+        mianownik = m;
     }
     ulamek & wyciagnijCalosci();
     ulamek & zamienNaDziesietne();
@@ -89,12 +107,14 @@ ulamek & ulamek::potegowanie(int wykladnik = 2){
 (*this).mianownik = pow(double((*this).mianownik),wykladnik);
 }
 int wspolnyMianownik(ulamek u1, ulamek u2){
+int u1Mianownik = u1.getMianownik();
+int u2Mianownik = u2.getMianownik();
 int tMianownik1 = 0, tMianownik2 = 0;
 for(int i = 2; i <= 100; i++){
-    tMianownik1 = u1.mianownik * i;
+    tMianownik1 = u1Mianownik * i;
     //cout << tMianownik1 << " ";
     for(int j = 2; j <= 100; j++){
-        tMianownik2 = u2.mianownik * j;
+        tMianownik2 = u2Mianownik * j;
         if(tMianownik1 == tMianownik2){
             return tMianownik1;
         }
@@ -102,109 +122,161 @@ for(int i = 2; i <= 100; i++){
 }
 }
 void rozszerz(ulamek & u1, ulamek & u2, int m){
+int u1Mianownik = u1.getMianownik();
+int u2Mianownik = u2.getMianownik();
+int u1Licznik = u1.getLicznik();
+int u2Licznik = u2.getLicznik();
     int i1,i2; // i - o ile pomnozyc licznik
-    i1 = m / u1.mianownik;
-    i2 = m / u2.mianownik;
-    u1.licznik *= i1;
-    u2.licznik *= i2;
-    u1.mianownik = m;
-    u2.mianownik = m;
+    i1 = m / u1Mianownik;
+    i2 = m / u2Mianownik;
+    u1Licznik *= i1;
+    u2Licznik *= i2;
+    u1Mianownik = m;
+    u2Mianownik = m;
+    u1.setLicznik(u1Licznik);
+    u2.setLicznik(u2Licznik);
+    u1.setMianownik(u1Mianownik);
+    u2.setMianownik(u2Mianownik);
 }
 
 ulamek operator+(ulamek u1, ulamek u2){
+
+int u1Mianownik = u1.getMianownik();
+int u2Mianownik = u2.getMianownik();
+int u1Licznik = u1.getLicznik();
+int u2Licznik = u2.getLicznik();
+int u1Calkowita = u1.getCalkowita();
+int u2Calkowita = u2.getCalkowita();
+int uwCalkowita, uwLicznik, uwMianownik;
 ulamek uw;
 //int tmianownik;
-uw.calkowita = u1.calkowita + u2.calkowita;
-if(u1.mianownik != u2.mianownik){
-    uw.mianownik = u1.mianownik * u2.mianownik;
-    uw.licznik = (u1.licznik * u2.mianownik) + (u2.licznik * u1.mianownik);
+uwCalkowita = u1Calkowita + u2Calkowita;
+if(u1Mianownik != u2Mianownik){
+    uwMianownik = u1Mianownik * u2Mianownik;
+    uwLicznik = (u1Licznik * u2Mianownik) + (u2Licznik * u1Mianownik);
 }
 else{
-    uw.mianownik = u1.mianownik;
-    uw.licznik = u1.licznik + u2.licznik;
+    uwMianownik = u1Mianownik;
+    uwLicznik = u1Licznik + u2Licznik;
 }
+uw.setCalkowita(uwCalkowita);
+uw.setLicznik(uwLicznik);
+uw.setMianownik(uwMianownik);
 return uw;
 }
 
 ulamek operator-(ulamek u1, ulamek u2){
+int u1Mianownik = u1.getMianownik();
+int u2Mianownik = u2.getMianownik();
+int u1Licznik = u1.getLicznik();
+int u2Licznik = u2.getLicznik();
+int u1Calkowita = u1.getCalkowita();
+int u2Calkowita = u2.getCalkowita();
+int uwCalkowita, uwLicznik, uwMianownik;
 ulamek uw;
 //int tmianownik;
 int wm = 0; // wm - wspolny mianownik
-if(u2.licznik >= u1.licznik)
-    uw.calkowita = u1.calkowita - u2.calkowita - (u1.licznik / u2.licznik);
+if(u2Licznik >= u1Licznik)
+    uwCalkowita = u1Calkowita - u2Calkowita - (u1Licznik / u2Licznik);
 else{
-    uw.calkowita = u1.calkowita - u2.calkowita;
+    uwCalkowita = u1Calkowita - u2Calkowita;
 }
-if(u1.mianownik != u2.mianownik){
+if(u1Mianownik !=u2Mianownik){
     wm = wspolnyMianownik(u1,u2);
-    uw.mianownik = wm;
+    uwMianownik = wm;
     //uw.mianownik = u1.mianownik * u2.mianownik;
-    uw.licznik = (u1.licznik * (wm / u1.mianownik)) - (u2.licznik * (wm  / u2.mianownik ));
+    uwLicznik = (u1Licznik * (wm / u1Mianownik)) - (u2Licznik * (wm  / u2Mianownik ));
 }
 else{
-    uw.mianownik = u1.mianownik;
-    uw.licznik = u1.licznik - u2.licznik;
+    uwMianownik = u1Mianownik;
+    uwLicznik = u1Licznik - u2Licznik;
 }
+uw.setCalkowita(uwCalkowita);
+uw.setLicznik(uwLicznik);
+uw.setMianownik(uwMianownik);
 //uw.wyciagnijCalosci();
 return uw;
 }
 
 ulamek operator*(ulamek u1, ulamek u2){
+int u1Mianownik = u1.getMianownik();
+int u2Mianownik = u2.getMianownik();
+int u1Licznik = u1.getLicznik();
+int u2Licznik = u2.getLicznik();
+int u1Calkowita = u1.getCalkowita();
+int u2Calkowita = u2.getCalkowita();
+int uwCalkowita, uwLicznik, uwMianownik;
 ulamek uw;
 //int tmianownik;
-uw.mianownik = u1.mianownik * u2.mianownik;
-if(u1.calkowita && u2.calkowita)
-    uw.licznik = ((u1.calkowita * u1.mianownik) + u1.licznik) * ((u2.calkowita * u2.mianownik) + u2.licznik);
-else if(u1.calkowita && u2.calkowita == 0)
-    uw.licznik = ((u1.calkowita * u1.mianownik) + u1.licznik) * u2.licznik;
-else if(u1.calkowita == 0 && u2.calkowita)
-    uw.licznik = u1.licznik * ((u2.calkowita * u2.mianownik) + u2.licznik);
+uwMianownik = u1Mianownik * u2Mianownik;
+if(u1Calkowita && u2Calkowita)
+    uwLicznik = ((u1Calkowita * u1Mianownik) + u1Licznik) * ((u2Calkowita * u2Mianownik) + u2Licznik);
+else if(u1Calkowita && u2Calkowita == 0)
+    uwLicznik = ((u1Calkowita * u1Mianownik) + u1Licznik) * u2Licznik;
+else if(u1Calkowita == 0 && u2Calkowita)
+    uwLicznik = u1Licznik * ((u2Calkowita* u2Mianownik) + u2Licznik);
 else
-    uw.licznik = u1.licznik * u2.licznik;
+    uwLicznik = u1Licznik * u2Licznik;
 
-uw.calkowita = 0;
+uwCalkowita = 0;
 //uw.wyciagnijCalosci();
+uw.setCalkowita(uwCalkowita);
+uw.setLicznik(uwLicznik);
+uw.setMianownik(uwMianownik);
 return uw;
 }
 ulamek operator/(ulamek u1, ulamek u2){
+int u1Mianownik = u1.getMianownik();
+int u2Mianownik = u2.getMianownik();
+int u1Licznik = u1.getLicznik();
+int u2Licznik = u2.getLicznik();
+int u1Calkowita = u1.getCalkowita();
+int u2Calkowita = u2.getCalkowita();
+int uwCalkowita, uwLicznik, uwMianownik;
 ulamek uw;
 //int tmianownik;
 int tLicznik1 = 0,tLicznik2 = 0;
 //uw.mianownik = u1.mianownik * u2.mianownik;
-if(u1.calkowita && u2.calkowita){
+if(u1Calkowita && u2Calkowita){
 //uw.licznik = ((u1.calkowita * u1.mianownik) + u1.licznik) * ((u2.calkowita * u2.mianownik) + u2.licznik);
-    tLicznik1 = ((u1.calkowita * u1.mianownik) + u1.licznik);
-    tLicznik2 = ((u2.calkowita * u2.mianownik) + u2.licznik);
-    uw.licznik = tLicznik1 * u2.mianownik;
-    uw.mianownik = u1.mianownik * tLicznik2;
+    tLicznik1 = ((u1Calkowita * u1Mianownik) + u1Licznik);
+    tLicznik2 = ((u2Calkowita * u2Mianownik) + u2Licznik);
+    uwLicznik = tLicznik1 * u2Mianownik;
+    uwMianownik = u1Mianownik * tLicznik2;
 }
-else if(u1.calkowita && u2.calkowita == 0){
-    tLicznik1 = ((u1.calkowita * u1.mianownik) + u1.licznik);
-    uw.licznik = tLicznik1 * u2.mianownik;
-    uw.mianownik = u1.mianownik * u2.licznik;
+else if(u1Calkowita && u2Calkowita == 0){
+    tLicznik1 = ((u1Calkowita * u1Mianownik) + u1Licznik);
+    uwLicznik = tLicznik1 * u2Mianownik;
+    uwMianownik = u1Mianownik * u2Licznik;
 }
-else if(u1.calkowita == 0 && u2.calkowita){
-    tLicznik2 = ((u2.calkowita * u2.mianownik) + u2.licznik);
-    uw.licznik = u1.licznik * u2.mianownik;
-    uw.mianownik = u1.mianownik * tLicznik2;
+else if(u1Calkowita == 0 && u2Calkowita){
+    tLicznik2 = ((u2Calkowita * u2Mianownik) + u2Licznik);
+    uwLicznik = u1Licznik * u2Mianownik;
+    uwMianownik = u1Mianownik * tLicznik2;
 }
 else{
-uw.licznik = u1.licznik * u2.mianownik;
-uw.mianownik = u1.mianownik * u2.licznik;
+uwLicznik = u1Licznik * u2Mianownik;
+uwMianownik = u1Mianownik * u2Licznik;
 }
-uw.calkowita = 0;
+uwCalkowita = 0;
 //uw.wyciagnijCalosci();
+uw.setCalkowita(uwCalkowita);
+uw.setLicznik(uwLicznik);
+uw.setMianownik(uwMianownik);
 return uw;
 }
 ostream & operator<<(ostream &o, ulamek u1){
-  if(u1.licznik == 0)
-             o << u1.calkowita << endl;
-         else if(u1.licznik == u1.mianownik)
-             o << u1.licznik << endl;
-        else if(u1.calkowita == 0)
-            o << u1.licznik << "/" << u1.mianownik << endl;
+int u1Mianownik = u1.getMianownik();
+int u1Licznik = u1.getLicznik();
+int u1Calkowita = u1.getCalkowita();
+  if(u1Licznik == 0)
+             o << u1Calkowita << endl;
+         else if(u1Licznik == u1Mianownik)
+             o << u1Licznik << endl;
+        else if(u1Calkowita == 0)
+            o << u1Licznik << "/" << u1Mianownik << endl;
         else
-    o << u1.calkowita << " " << u1.licznik << "/" << u1.mianownik << endl;
+    o << u1Calkowita << " " << u1Licznik << "/" << u1Mianownik << endl;
 return o;
 }
 int main()
