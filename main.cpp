@@ -65,6 +65,7 @@ public:
     ulamek & skroc();
     ulamek & odwroc();
     ulamek & potegowanie(int wykladnik);
+    ulamek & pierwiastkowanie();
     //ulamek & rozszerz(int m); // m - mianownik
     //int wspolnyMianownik(ulamek u1, ulamek u2);
     //ulamek & operator=(const ulamek & u);
@@ -103,6 +104,7 @@ public:
     cout << "8 - pomnoz ulamki" << endl;
     cout << "9 - podziel ulamki" << endl;
     cout << "10 - potegowanie" << endl;
+    cout << "11 - pierwiastkowanie" << endl;
     cout << "0 - wyjscie z programu" << endl;
     //cout << "11 - pierwiastkowanie" << endl;
     }
@@ -151,6 +153,10 @@ tMianownik = (*this).mianownik;
 ulamek & ulamek::potegowanie(int wykladnik = 2){
 (*this).licznik = pow(double((*this).licznik),wykladnik);
 (*this).mianownik = pow(double((*this).mianownik),wykladnik);
+}
+ulamek & ulamek::pierwiastkowanie(){
+(*this).licznik = sqrt(double((*this).licznik));
+(*this).mianownik = sqrt(double((*this).mianownik));
 }
 int wspolnyMianownik(ulamek u1, ulamek u2){
 int u1Mianownik = u1.getMianownik();
@@ -512,6 +518,18 @@ int main()
             u1.potegowanie();
             cout << "Ulamek wynikowy: " << u1;
          }
+          else if(m1 == 11){
+            system("CLS");
+            cout << "Pierwiastkowanie ulamkow:" << endl;
+            cout << "Podaj licznik ulamka: ";
+            cin >> licznik1;
+            cout << "Podaj mianownik ulamka: ";
+            cin >> mianownik1;
+            ulamek u1(0,licznik1,mianownik1);
+            u1.pierwiastkowanie();
+            cout << "Ulamek wynikowy: " << u1;
+         }
+
          else if(m1 == 0)
             break;
          else{
