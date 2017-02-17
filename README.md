@@ -12,7 +12,8 @@ Obecna funkcjonalność:
 - dzielenie
 - potegowanie
 - wypisywanie
+- pierwiastkowanie
+- menu
 
 W realizacji:
-- menu
-- pierwiastkowanie
+- obliczenie działań z jednej linii
