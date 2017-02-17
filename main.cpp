@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+#include <cstdlib>
 using namespace std;
 class ulamek{
 
@@ -38,7 +39,7 @@ public:
         if(licznik == 0)
             dziesietna = calkowita;
         else
-        dziesietna = licznik / mianownik;
+        dziesietna = double(licznik) / double(mianownik);
         cout << dziesietna << endl;
     }
     int getCalkowita(){
@@ -75,6 +76,49 @@ public:
     //return * this;
     }
 };
+class menu{
+    int menu1,wyswietlMenu;
+public:
+    menu(){
+    menu1 = -1;
+    wyswietlMenu = 1;
+    }
+    menu(int m1,int wM){
+    menu1 = m1;
+    wyswietlMenu = wM;
+    }
+    menu(menu & m){
+    menu1 = m.menu1;
+    wyswietlMenu = m.wyswietlMenu;
+    }
+    void wyswietlMenu1(){
+    cout << "Witaj w programie ulamki. Wybierz co chcesz zrobic: " << endl;
+    cout << "1 - skroc ulamki" << endl;
+    cout << "2 - rozszerz ulamki" << endl;
+    cout << "3 - wyciag calosci" << endl;
+    cout << "4 - odwroc ulamek" << endl;
+    cout << "5 - zamien na dziesietne" << endl;
+    cout << "6 - dodaj ulamki" << endl;
+    cout << "7 - odejmij ulamki" << endl;
+    cout << "8 - pomnoz ulamki" << endl;
+    cout << "9 - podziel ulamki" << endl;
+    cout << "10 - potegowanie" << endl;
+    cout << "0 - wyjscie z programu" << endl;
+    //cout << "11 - pierwiastkowanie" << endl;
+    }
+    int getMenu1(){
+        return menu1;
+    }
+    int getWyswietlMenu(){
+        return wyswietlMenu;
+    }
+    void setMenu1(int m){
+        menu1 = m;
+    }
+    void setWyswietlMenu(int wM){
+        wyswietlMenu = wM;
+    }
+};
 ulamek & ulamek::wyciagnijCalosci(){
 //ulamek uw;
 if((*this).licznik > (*this).mianownik){
@@ -85,6 +129,8 @@ else if((*this).licznik < (-(*this).mianownik)){
      (*this).calkowita -= ((*this).licznik / (-(*this).mianownik));
       (*this).licznik = (*this).licznik % (-(*this).mianownik);
 }
+if((*this).licznik < 0)
+    (*this).licznik = -(*this).licznik;
 }
 ulamek & ulamek::skroc(){
 int x = 2;
@@ -176,20 +222,35 @@ int uwCalkowita, uwLicznik, uwMianownik;
 ulamek uw;
 //int tmianownik;
 int wm = 0; // wm - wspolny mianownik
-if(u2Licznik >= u1Licznik)
-    uwCalkowita = u1Calkowita - u2Calkowita - (u1Licznik / u2Licznik);
-else{
-    uwCalkowita = u1Calkowita - u2Calkowita;
-}
 if(u1Mianownik !=u2Mianownik){
-    wm = wspolnyMianownik(u1,u2);
+    wm = (wspolnyMianownik(u1,u2));
     uwMianownik = wm;
-    //uw.mianownik = u1.mianownik * u2.mianownik;
-    uwLicznik = (u1Licznik * (wm / u1Mianownik)) - (u2Licznik * (wm  / u2Mianownik ));
+    u1Licznik *= wm / u1Mianownik;
+    u2Licznik *= wm / u2Mianownik;
 }
 else{
     uwMianownik = u1Mianownik;
+}
+if(u1Calkowita > 0 && u2Calkowita == 0){
+     u1Licznik += u1Calkowita * uwMianownik;
+     uwLicznik = u1Licznik - u2Licznik;
+     uwCalkowita = 0;
+}
+else if(u1Calkowita == 0 && u2Calkowita > 0){
+    u2Licznik += u2Calkowita * uwMianownik;
     uwLicznik = u1Licznik - u2Licznik;
+    uwCalkowita = 0;
+}
+
+else if(u1Calkowita > 0 && u2Calkowita > 0){
+    u1Licznik += u1Calkowita * uwMianownik;
+    u2Licznik += u2Calkowita * uwMianownik;
+    uwLicznik = u1Licznik - u2Licznik;
+    uwCalkowita = 0;
+}
+else{
+     uwLicznik = u1Licznik - u2Licznik;
+     uwCalkowita = 0;
 }
 uw.setCalkowita(uwCalkowita);
 uw.setLicznik(uwLicznik);
@@ -281,7 +342,186 @@ return o;
 }
 int main()
 {
-    ulamek u1,u2(0,7,2),u3(u2);
+    menu m;
+    int m1, licznik1, mianownik1, calkowita1,tymczasowa1, licznik2, mianownik2, calkowita2;
+    while(m.getMenu1() != 0){
+        m.wyswietlMenu1();
+        cin >> m1;
+        //m.setMenu1(m1);
+         if(m1 == 1){
+            system("CLS");
+            cout << "Skracanie ulamkow:" << endl;
+            cout << "Podaj licznik: ";
+            cin >> licznik1;
+            cout << "Podaj mianownik: ";
+            cin >> mianownik1;
+            ulamek u1(0,licznik1,mianownik1);
+            u1.skroc();
+            cout << u1;
+            //ulamek u1;
+         }
+         else if(m1 == 2){
+              system("CLS");
+            cout << "Rozszerzanie ulamkow: " << endl;
+            cout << "Podaj licznik 1-ulamka: ";
+            cin >> licznik1;
+            cout << "Podaj mianownik 1-ulamka: ";
+            cin >> mianownik1;
+            ulamek u1(0,licznik1,mianownik1);
+             cout << "Podaj licznik 2-ulamka: ";
+            cin >> licznik2;
+            cout << "Podaj mianownik 2-ulamka: ";
+            cin >> mianownik2;
+            ulamek u2(0,licznik2,mianownik2);
+            cout << "Podaj do jakiego mianownika chcesz rozszerzyc: ";
+            cin >> tymczasowa1;
+            rozszerz(u1,u2,tymczasowa1);
+            u1.wyciagnijCalosci();
+            u2.wyciagnijCalosci();
+            cout << "Pierwszy ulamek: " << u1 << "Drugi ulamek: " << u2;
+         }
+         else if(m1 == 3){
+            system("CLS");
+            cout << "Wyciaganie calosci:" << endl;
+             cout << "Podaj licznik: ";
+            cin >> licznik1;
+            cout << "Podaj mianownik: ";
+            cin >> mianownik1;
+            ulamek u1(0,licznik1,mianownik1);
+            u1.wyciagnijCalosci();
+            cout << u1;
+         }
+         else if(m1 == 4){
+             system("CLS");
+            cout << "Odwracanie ulamkow:" << endl;
+            cout << "Podaj licznik: ";
+            cin >> licznik1;
+            cout << "Podaj mianownik: ";
+            cin >> mianownik1;
+            ulamek u1(0,licznik1,mianownik1);
+            u1.odwroc();
+            u1.wyciagnijCalosci();
+            cout << u1;
+         }
+         else if(m1 == 5){
+             system("CLS");
+            cout << "Zamien na dziesietne:" << endl;
+            cout << "Podaj licznik: ";
+            cin >> licznik1;
+            cout << "Podaj mianownik: ";
+            cin >> mianownik1;
+            ulamek u1(0,licznik1,mianownik1);
+            u1.wypiszDziesietne();
+         }
+         else if(m1 == 6){
+            system("CLS");
+            cout << "Dodawanie ulamkow:" << endl;
+            cout << "Podaj czesc calkowita 1-ulamka: ";
+            cin >> calkowita1;
+            cout << "Podaj licznik 1-ulamka: ";
+            cin >> licznik1;
+            cout << "Podaj mianownik 1-ulamka: ";
+            cin >> mianownik1;
+            ulamek u1(calkowita1,licznik1,mianownik1);
+            cout << "Podaj czesc calkowita 2-ulamka: ";
+            cin >> calkowita2;
+             cout << "Podaj licznik 2-ulamka: ";
+            cin >> licznik2;
+            cout << "Podaj mianownik 2-ulamka: ";
+            cin >> mianownik2;
+            ulamek u2(calkowita2,licznik2,mianownik2);
+            ulamek u3;
+            u3 = u1 + u2;
+            u3.wyciagnijCalosci();
+            cout << "Ulamek wynikowy: " << u3;
+         }
+         else if(m1 == 7){
+            system("CLS");
+            cout << "Odejmowanie ulamkow:" << endl;
+            cout << "Podaj czesc calkowita 1-ulamka: ";
+            cin >> calkowita1;
+            cout << "Podaj licznik 1-ulamka: ";
+            cin >> licznik1;
+            cout << "Podaj mianownik 1-ulamka: ";
+            cin >> mianownik1;
+            ulamek u1(calkowita1,licznik1,mianownik1);
+            cout << "Podaj czesc calkowita 2-ulamka: ";
+            cin >> calkowita2;
+             cout << "Podaj licznik 2-ulamka: ";
+            cin >> licznik2;
+            cout << "Podaj mianownik 2-ulamka: ";
+            cin >> mianownik2;
+            ulamek u2(calkowita2,licznik2,mianownik2);
+            ulamek u3;
+            u3 = u1 - u2;
+            u3.wyciagnijCalosci();
+            cout << "Ulamek wynikowy: " << u3;
+         }
+        else if(m1 == 8){
+            system("CLS");
+            cout << "Mnozenie ulamkow:" << endl;
+            cout << "Podaj czesc calkowita 1-ulamka: ";
+            cin >> calkowita1;
+            cout << "Podaj licznik 1-ulamka: ";
+            cin >> licznik1;
+            cout << "Podaj mianownik 1-ulamka: ";
+            cin >> mianownik1;
+            ulamek u1(calkowita1,licznik1,mianownik1);
+            cout << "Podaj czesc calkowita 2-ulamka: ";
+            cin >> calkowita2;
+             cout << "Podaj licznik 2-ulamka: ";
+            cin >> licznik2;
+            cout << "Podaj mianownik 2-ulamka: ";
+            cin >> mianownik2;
+            ulamek u2(calkowita2,licznik2,mianownik2);
+            ulamek u3;
+            u3 = u1 * u2;
+            u3.wyciagnijCalosci();
+            cout << "Ulamek wynikowy: " << u3;
+         }
+          else if(m1 == 9){
+            system("CLS");
+            cout << "Dzielenie ulamkow:" << endl;
+            cout << "Podaj czesc calkowita 1-ulamka: ";
+            cin >> calkowita1;
+            cout << "Podaj licznik 1-ulamka: ";
+            cin >> licznik1;
+            cout << "Podaj mianownik 1-ulamka: ";
+            cin >> mianownik1;
+            ulamek u1(calkowita1,licznik1,mianownik1);
+            cout << "Podaj czesc calkowita 2-ulamka: ";
+            cin >> calkowita2;
+             cout << "Podaj licznik 2-ulamka: ";
+            cin >> licznik2;
+            cout << "Podaj mianownik 2-ulamka: ";
+            cin >> mianownik2;
+            ulamek u2(calkowita2,licznik2,mianownik2);
+            ulamek u3;
+            u3 = u1 / u2;
+            u3.wyciagnijCalosci();
+            cout << "Ulamek wynikowy: " << u3;
+         }
+         else if(m1 == 10){
+            system("CLS");
+            cout << "Potegowanie ulamkow:" << endl;
+            cout << "Podaj licznik ulamka: ";
+            cin >> licznik1;
+            cout << "Podaj mianownik ulamka: ";
+            cin >> mianownik1;
+            ulamek u1(0,licznik1,mianownik1);
+            u1.potegowanie();
+            cout << "Ulamek wynikowy: " << u1;
+         }
+         else if(m1 == 0)
+            break;
+         else{
+            cout << "Bledna liczba." << endl;
+            //m.wyswietlMenu1();
+            //cin >> m1;
+         }
+
+    }
+   /* ulamek u1,u2(0,7,2),u3(u2);
    cout << u1;
    cout << u2;
    cout << u3;
@@ -318,6 +558,6 @@ int main()
     u7.skroc();
     cout << u7;
     //cout << endl << endl << wspolnyMianownik(u4,u5) << endl << endl;
-    //u3.wypiszDziesietne();
+    //u3.wypiszDziesietne();*/
     return 0;
 }
