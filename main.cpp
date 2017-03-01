@@ -62,6 +62,7 @@ public:
     }
     ulamek & wyciagnijCalosci();
     ulamek & zamienNaDziesietne();
+    ulamek & NWD();
     ulamek & skroc();
     ulamek & odwroc();
     ulamek & potegowanie(int wykladnik);
@@ -135,14 +136,26 @@ if((*this).licznik < 0)
     (*this).licznik = -(*this).licznik;
 }
 ulamek & ulamek::skroc(){
-int x = 2;
+/*int x = 2;
 while((*this).mianownik % x == 0){
      if((*this).mianownik % x == 0){
         (*this).mianownik /= x;
         (*this).licznik /= x;
      }
     x++;
+}*/
+// obliczanie NWD
+int tymczasowa;
+int m = (*this).mianownik;
+int l = (*this).licznik;
+while(m != 0){
+    tymczasowa = m;
+    m = l % m;
+    l = tymczasowa;
 }
+// skracanie ulamkow przez NWD
+(*this).mianownik /= l;
+(*this).licznik /= l;
 }
 ulamek & ulamek::odwroc(){
 int tMianownik = 0;
