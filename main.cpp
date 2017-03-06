@@ -38,8 +38,12 @@ public:
     void wypiszDziesietne(){
         if(licznik == 0)
             dziesietna = calkowita;
+        else{
+        if(calkowita)
+        dziesietna = (double(calkowita) * double(mianownik) + double(licznik)) / double(mianownik);
         else
         dziesietna = double(licznik) / double(mianownik);
+        }
         cout << dziesietna << endl;
     }
     int getCalkowita(){
@@ -106,6 +110,7 @@ public:
     cout << "9 - podziel ulamki" << endl;
     cout << "10 - potegowanie" << endl;
     cout << "11 - pierwiastkowanie" << endl;
+    cout << "12 - dzialania arytmetyczne z jednej linii" << endl;
     cout << "0 - wyjscie z programu" << endl;
     //cout << "11 - pierwiastkowanie" << endl;
     }
@@ -131,6 +136,11 @@ if((*this).licznik > (*this).mianownik){
 else if((*this).licznik < (-(*this).mianownik)){
      (*this).calkowita -= ((*this).licznik / (-(*this).mianownik));
       (*this).licznik = (*this).licznik % (-(*this).mianownik);
+}
+else if((*this).licznik == (*this).mianownik){
+    (*this).calkowita += ((*this).licznik / (*this).mianownik);
+    (*this).licznik = 0;
+    (*this).mianownik = 1;
 }
 if((*this).licznik < 0)
     (*this).licznik = -(*this).licznik;
@@ -224,6 +234,7 @@ else{
     uwMianownik = u1Mianownik;
     uwLicznik = u1Licznik + u2Licznik;
 }
+//cout << uwCalkowita;
 uw.setCalkowita(uwCalkowita);
 uw.setLicznik(uwLicznik);
 uw.setMianownik(uwMianownik);
@@ -359,10 +370,151 @@ int u1Calkowita = u1.getCalkowita();
     o << u1Calkowita << " " << u1Licznik << "/" << u1Mianownik << endl;
 return o;
 }
+int jednaLinia(string linia ,ulamek & u1, ulamek & u2){
+ string liczba1C, liczba1U, liczba1L, liczba1M, liczba2C, liczba2U, liczba2L, liczba2M;
+    int liczba1Calkowita, liczba1Ulamkowa, liczba1Licznik, liczba1Mianownik, liczba2Calkowita, liczba2Ulamkowa, liczba2Licznik, liczba2Mianownik;
+    int znak, dzialanie;
+    if( linia.find("+") != -1){
+        znak = linia.find("+");
+        dzialanie = 1;
+    }
+    else if(linia.find("-") != -1){
+        znak =  linia.find("-");
+        dzialanie = 2;
+    }
+    else if(linia.find("*") != -1){
+        znak =  linia.find("*");
+        dzialanie = 3;
+    }
+    else if(linia.find("/") != -1){
+        znak =  linia.find("/");
+        dzialanie = 4;
+    }
+    int dLinia = linia.size();
+    string liczba1 = linia.substr(0,znak - 1);
+    string liczba2 = linia.substr(znak + 2,dLinia);
+    int spacja1 = liczba1.find(" ");
+    int spacja2 = liczba2.find(" ");
+    int kreska1 = -1, kreska2 = -1;
+
+
+    if(spacja1 != -1){
+            //cout << spacja1;
+        liczba1C = liczba1.substr(0,spacja1);
+        liczba1U = liczba1.substr(spacja1 + 1,liczba1.size());
+         //cout << liczba1C << " " << liczba1U;
+        if(liczba1.find("/") != -1){
+            kreska1 = liczba1U.find("/");
+            liczba1L = liczba1U.substr(0,kreska1);
+            liczba1M = liczba1U.substr(kreska1 + 1, liczba1U.size());
+        }
+    }
+    else if(liczba1.find("/") != -1){
+            kreska1 = liczba1.find("/");
+            liczba1L = liczba1.substr(0,kreska1);
+            liczba1M = liczba1.substr(kreska1 + 1, liczba1.size());
+    }
+    else{
+        liczba1C = liczba1.substr(0,liczba1.size());
+        //cout << liczba1C;
+    }
+     if(spacja2 != -1){
+        // cout << spacja2;
+        liczba2C = liczba2.substr(0,spacja2);
+        liczba2U = liczba2.substr(spacja2 + 1,liczba2.size());
+         //cout << liczba2C <<" " << liczba2U;
+        if(liczba2.find("/") != -1){
+            kreska2 = liczba2U.find("/");
+            liczba2L = liczba2U.substr(0,kreska2);
+            liczba2M = liczba2U.substr(kreska2 + 1, liczba2U.size());
+        }
+     }
+      else if(liczba2.find("/") != -1){
+            kreska2 = liczba2.find("/");
+           // cout << kreska2;
+            liczba2L = liczba2.substr(0,kreska2);
+            liczba2M = liczba2.substr(kreska2 + 1, liczba2.size());
+            //cout << liczba2L << " " << liczba2M;
+    }
+    else{
+         liczba2C = liczba2.substr(0,liczba2.size());
+    }
+    if(spacja1 != -1)
+        liczba1Calkowita = atoi(liczba1C.c_str());
+    if(kreska1 != -1){
+        liczba1Licznik = atoi(liczba1L.c_str());
+        liczba1Mianownik = atoi(liczba1M.c_str());
+    }
+    if(spacja1 == -1 && kreska1 == -1){
+        liczba1Calkowita = atoi(liczba1C.c_str());
+        //cout << liczba2Calkowita;
+    }
+    if(spacja1 != -1 && kreska1 != -1){
+        u1.setCalkowita(liczba1Calkowita);
+        u1.setLicznik(liczba1Licznik);
+        u1.setMianownik(liczba1Mianownik);
+    }
+    else if(spacja1 == -1 && kreska1 != -1){
+        u1.setCalkowita(0);
+        u1.setLicznik(liczba1Licznik);
+        u1.setMianownik(liczba1Mianownik);
+        //cout << u1.getCalkowita() << " " << u1.getLicznik() << "/" << u1.getMianownik();
+    }
+    else if(spacja1 != -1 && kreska1 == -1){
+        u1.setCalkowita(liczba1Calkowita);
+        u1.setLicznik(0);
+        u1.setMianownik(1);
+    }
+    else if(spacja1 == -1 && kreska1 == -1){
+      //  cout << liczba1Calkowita;
+        u1.setCalkowita(liczba1Calkowita);
+        u1.setLicznik(0);
+        u1.setMianownik(1);
+    }
+
+    //cout << liczba1Calkowita << " " << liczba1Licznik << "/" << liczba1Mianownik << endl;
+     if(spacja2 != -1)
+        liczba2Calkowita = atoi(liczba2C.c_str());
+    if(kreska2 != -1){
+        liczba2Licznik = atoi(liczba2L.c_str());
+        liczba2Mianownik = atoi(liczba2M.c_str());
+    }
+      if(spacja2 == -1 && kreska2 == -1){
+        liczba2Calkowita = atoi(liczba2C.c_str());
+        //cout << liczba2Calkowita;
+    }
+    //cout << liczba2Licznik << "/" << liczba2Mianownik << endl;
+    if(spacja2 != -1 && kreska2 != -1){
+        u2.setCalkowita(liczba2Calkowita);
+        u2.setLicznik(liczba2Licznik);
+        u2.setMianownik(liczba2Mianownik);
+    }
+    else if(spacja2 == -1 && kreska2 != -1){
+        u2.setCalkowita(0);
+        u2.setLicznik(liczba2Licznik);
+        u2.setMianownik(liczba2Mianownik);
+    }
+    else if(spacja2 != -1 && kreska2 == -1){
+        u2.setCalkowita(liczba2Calkowita);
+        u2.setLicznik(1);
+        u2.setMianownik(0);
+    }
+     else if(spacja2 == -1 && kreska2 == -1){
+       // cout << liczba2Calkowita;
+        u2.setCalkowita(liczba2Calkowita);
+
+        u2.setLicznik(0);
+        u2.setMianownik(1);
+    }
+    return dzialanie;
+}
 int main()
 {
+    ulamek u1, u2, u3;
+    //int dzialanie = jednaLinia("1 1/2 + 5/8", u1, u2);
     menu m;
-    int m1, licznik1, mianownik1, calkowita1,tymczasowa1, licznik2, mianownik2, calkowita2;
+    int m1, licznik1, mianownik1, calkowita1,tymczasowa1, licznik2, mianownik2, calkowita2, dzialanie;
+    string linia;
     while(m.getMenu1() != 0){
         m.wyswietlMenu1();
         cin >> m1;
@@ -542,7 +694,28 @@ int main()
             u1.pierwiastkowanie();
             cout << "Ulamek wynikowy: " << u1;
          }
-
+         else if(m1 == 12){
+              system("CLS");
+              cout << "Dzialania arytmetyczne z jednej linii:" << endl;
+              cout << "Podaj dwie liczby w jednej linni, miedzy nimi wstaw znak arytmetyczny(+,-,*,/)" << endl;
+              cin.ignore();
+              getline(cin, linia);
+             // cout << linia;
+              dzialanie = jednaLinia(linia, u1, u2);
+            //  cout << u1 << u2;
+                if(dzialanie == 1)
+                    u3 = u1 + u2;
+                else if(dzialanie == 2)
+                    u3 = u1 - u2;
+                else if(dzialanie == 3)
+                    u3 = u1 * u2;
+                else if(dzialanie == 4)
+                    u3 = u1 / u2;
+                u3.wyciagnijCalosci();
+                u3.skroc();
+             //  cout << u3.getLicznik() << " " << u3.getMianownik();
+                cout << "Ulamek wynikowy: " << u3;
+         }
          else if(m1 == 0)
             break;
          else{
@@ -552,6 +725,7 @@ int main()
          }
 
     }
+
    /* ulamek u1,u2(0,7,2),u3(u2);
    cout << u1;
    cout << u2;
