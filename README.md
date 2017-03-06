@@ -13,7 +13,8 @@ Obecna funkcjonalność:
 - potegowanie
 - wypisywanie
 - pierwiastkowanie
+- obliczenie jednego działaia (dwie liczby) z jednej linii
 - menu
 
 W realizacji:
-- obliczenie działań z jednej linii
+- obliczenie wielu działań (wiele liczb) z jednej linii.
