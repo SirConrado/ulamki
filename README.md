@@ -14,6 +14,5 @@ Obecna funkcjonalność:
 - wypisywanie
 - pierwiastkowanie
 - menu
-
-W realizacji:
-- obliczenie działań z jednej linii
+- obliczenie dwóch działań z jednej linii
+- obliczenie kilku działań z jednej linii
