@@ -110,7 +110,8 @@ public:
     cout << "9 - podziel ulamki" << endl;
     cout << "10 - potegowanie" << endl;
     cout << "11 - pierwiastkowanie" << endl;
-    cout << "12 - dzialania arytmetyczne z jednej linii" << endl;
+    cout << "12 - dzialanie arytmetyczne z jednej linii" << endl;
+    cout << "13 - wiele dzialan arytmetycznych z jednej linii" << endl;
     cout << "0 - wyjscie z programu" << endl;
     //cout << "11 - pierwiastkowanie" << endl;
     }
@@ -225,14 +226,37 @@ int u2Calkowita = u2.getCalkowita();
 int uwCalkowita, uwLicznik, uwMianownik;
 ulamek uw;
 //int tmianownik;
-uwCalkowita = u1Calkowita + u2Calkowita;
-if(u1Mianownik != u2Mianownik){
-    uwMianownik = u1Mianownik * u2Mianownik;
-    uwLicznik = (u1Licznik * u2Mianownik) + (u2Licznik * u1Mianownik);
+//uwCalkowita = u1Calkowita + u2Calkowita;
+int wm = 0; // wm - wspolny mianownik
+if(u1Mianownik !=u2Mianownik){
+    wm = (wspolnyMianownik(u1,u2));
+    uwMianownik = wm;
+    u1Licznik *= wm / u1Mianownik;
+    u2Licznik *= wm / u2Mianownik;
 }
 else{
     uwMianownik = u1Mianownik;
+}
+if(u1Calkowita > 0 && u2Calkowita == 0){
+     u1Licznik += u1Calkowita * uwMianownik;
+     uwLicznik = u1Licznik + u2Licznik;
+     uwCalkowita = 0;
+}
+else if(u1Calkowita == 0 && u2Calkowita > 0){
+    u2Licznik += u2Calkowita * uwMianownik;
     uwLicznik = u1Licznik + u2Licznik;
+    uwCalkowita = 0;
+}
+
+else if(u1Calkowita > 0 && u2Calkowita > 0){
+    u1Licznik += u1Calkowita * uwMianownik;
+    u2Licznik += u2Calkowita * uwMianownik;
+    uwLicznik = u1Licznik + u2Licznik;
+    uwCalkowita = 0;
+}
+else{
+     uwLicznik = u1Licznik + u2Licznik;
+     uwCalkowita = 0;
 }
 //cout << uwCalkowita;
 uw.setCalkowita(uwCalkowita);
@@ -508,10 +532,122 @@ int jednaLinia(string linia ,ulamek & u1, ulamek & u2){
     }
     return dzialanie;
 }
+int * jednaLiniaWieleDzialan(string linia, ulamek *& u){
+    string * liczba = new string[10];
+    string * liczbaC = new string[10];
+    string * liczbaU = new string[10];
+    string * liczbaL = new string[10];
+    string * liczbaM = new string[10];
+    int * liczbaCalkowita = new int[10];
+    int * liczbaUlamkowa = new int[10];
+    int * liczbaLicznik = new int[10];
+    int * liczbaMianownik = new int[10];
+    int * dzialanie = new int[10];
+    int * miejsceDzialan = new int[10];
+    int * miejsceSpacji = new int[10];
+    int * miejsceKresek = new int[10];
+    int counterDzialan = 0;
+    int dLinia = linia.size();
+    for(int i = 0; i < dLinia; i++){
+        if(i > 0 && i < dLinia && linia[i + 1] == ' ' && linia[i - 1] == ' '){
+             if(linia[i] == '+' || linia[i] == '-' || linia[i] == '*' || linia[i] == '/'){
+                if(linia[i] == '+')
+                    dzialanie[counterDzialan] = 1;
+                else if(linia[i] == '-')
+                    dzialanie[counterDzialan] = 2;
+                else if(linia[i] == '*')
+                    dzialanie[counterDzialan] = 3;
+                else if(linia[i] == '/')
+                    dzialanie[counterDzialan] = 4;
+                miejsceDzialan[counterDzialan] = i;
+                counterDzialan++;
+             }
+        }
+    }
+   // cout << miejsceDzialan[0] << " " << miejsceDzialan[1];
+    //cout << counterDzialan;
+    // int x = 0;
+     for(int i = 0; i <= counterDzialan; i++){
+        if(i == 0){
+            liczba[i] = linia.substr(0,miejsceDzialan[i] - 1);
+        }
+        else if(i == counterDzialan){
+            liczba[i] = linia.substr(miejsceDzialan[i - 1] + 2,dLinia - 2);
+        }
+        else{
+            liczba[i] = linia.substr(miejsceDzialan[i - 1] + 2, miejsceDzialan[i] - miejsceDzialan[i - 1] - 3);
+            //cout << liczba[i] << endl;
+        }
+        //cout << liczba[i] << " ";
+        if(liczba[i].find(" ") == -1){
+           // cout << liczba[i] << endl;
+            miejsceSpacji[i] = -1;
+            if(liczba[i].find("/") != -1){
+            miejsceKresek[i] = liczba[i].find("/");
+            //liczbaU[i] = liczba[i].substr(0, liczba[i].size());
+            liczbaL[i] = liczba[i].substr(0, miejsceKresek[i]);
+            liczbaM[i] = liczba[i].substr(miejsceKresek[i] + 1, liczba[i].size());
+            //cout << liczbaL[i] << " " << liczbaM[i];
+            }
+            else{
+                liczbaC[i] = liczba[i].substr(0, liczba[i].size());
+                miejsceKresek[i] = -1;
+                //cout << liczbaC[i] << endl;
+                //cout << liczbaC[i] << endl;
+            }
+        }
+        else{
+             miejsceSpacji[i] = liczba[i].find(" ");
+             liczbaC[i] = liczba[i].substr(0,miejsceSpacji[i]);
+             liczbaU[i] = liczba[i].substr(miejsceSpacji[i] + 1, liczba[i].size());
+             miejsceKresek[i] = liczbaU[i].find("/");
+
+             liczbaL[i] = liczbaU[i].substr(0, miejsceKresek[i]);
+             liczbaM[i] = liczbaU[i].substr(miejsceKresek[i] + 1, liczba[i].size());
+        }
+        if(miejsceSpacji[i] != -1)
+            liczbaCalkowita[i] = atoi(liczbaC[i].c_str());
+        if(miejsceKresek[i] != -1){
+            liczbaLicznik[i] = atoi(liczbaL[i].c_str());
+            liczbaMianownik[i] = atoi(liczbaM[i].c_str());
+            //cout << liczbaLicznik[i] << " " << liczbaMianownik[i] << endl;
+        }
+        if(miejsceSpacji[i] == -1 && miejsceKresek[i] == -1){
+            liczbaCalkowita[i] = atoi(liczbaC[i].c_str());
+            //cout << liczbaCalkowita[i] << endl;
+        //cout << liczba2Calkowita;
+        }
+        if(miejsceSpacji[i] != -1 && miejsceKresek[i] != -1){
+            u[i].setCalkowita(liczbaCalkowita[i]);
+            u[i].setLicznik(liczbaLicznik[i]);
+            u[i].setMianownik(liczbaMianownik[i]);
+        }
+        else if(miejsceSpacji[i] == -1 && miejsceKresek[i] != -1){
+            u[i].setCalkowita(0);
+            u[i].setLicznik(liczbaLicznik[i]);
+            u[i].setMianownik(liczbaMianownik[i]);
+            //cout << u[i].getLicznik() << "  " << u[i].getMianownik();
+        }
+        else if(miejsceSpacji[i] != -1 && miejsceKresek[i] == -1){
+            u[i].setCalkowita(liczbaCalkowita[i]);
+            u[i].setLicznik(1);
+            u[i].setMianownik(0);
+        }
+         else if(miejsceSpacji[i] == -1 && miejsceKresek[i] == -1){
+            u[i].setCalkowita(liczbaCalkowita[i]);
+            u[i].setLicznik(0);
+            u[i].setMianownik(1);
+            //cout << u[i].getCalkowita() << endl;
+        }
+
+     }
+     //cout << liczbaC[2] << " " << liczbaU[2];
+
+    return dzialanie;
+}
 int main()
 {
     ulamek u1, u2, u3;
-    //int dzialanie = jednaLinia("1 1/2 + 5/8", u1, u2);
     menu m;
     int m1, licznik1, mianownik1, calkowita1,tymczasowa1, licznik2, mianownik2, calkowita2, dzialanie;
     string linia;
@@ -716,6 +852,37 @@ int main()
              //  cout << u3.getLicznik() << " " << u3.getMianownik();
                 cout << "Ulamek wynikowy: " << u3;
          }
+         else if(m1 == 13){
+                system("CLS");
+                cout << "Dzialania arytmetyczne z jednej linii:" << endl;
+                cout << "Podaj kilka liczb w jednej linni, miedzy nimi wstaw znak arytmetyczny(+,-,*,/)" << endl;
+                cin.ignore();
+                getline(cin, linia);
+                //linia = "1/2 + 1/4";
+                ulamek * u = new ulamek[10];
+                int * dzialania = new int[10];
+                int iloscDzialan = 0;
+                dzialania = jednaLiniaWieleDzialan(linia, u);
+                while(dzialania[iloscDzialan] != 0){
+                    iloscDzialan++;
+                }
+                ulamek uw = u[0];
+               // cout << u[0] << u[1] << u[2];
+                for(int i = 1; i <= iloscDzialan; i++){
+                    if(dzialania[i - 1] == 1)
+                        uw = uw + u[i];
+                    else if(dzialania[i - 1] == 2)
+                        uw = uw - u[i];
+                    else if(dzialania[i - 1] == 3)
+                        uw = uw * u[i];
+                    else if(dzialania[i - 1] == 4)
+                        uw = uw / u[i];
+                    //cout << u[i];
+                }
+                uw.wyciagnijCalosci();
+                uw.skroc();
+                cout << "Ulamek wynikowy: " << uw;
+            }
          else if(m1 == 0)
             break;
          else{
